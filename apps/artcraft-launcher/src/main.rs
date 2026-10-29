@@ -28,7 +28,7 @@ use artcraft_launcher_ui_egui::theme::Tokens;
 use artcraft_launcher_ui_egui::{Host, LauncherUi, Settings, TitleBar};
 use eframe::wgpu::rwh::{HasDisplayHandle, RawDisplayHandle};
 
-const APP_ID: &str = "ai.storyteller.artcraft-launcher";
+const APP_ID: &str = "ai.storyteller.artpixels";
 const SETTINGS_KEY: &str = "settings";
 
 type Wake = Arc<OnceLock<Box<dyn Fn() + Send + Sync>>>;
@@ -62,7 +62,7 @@ fn main() -> ExitCode {
         })
         .collect();
     if args.iter().any(|a| a == "--version" || a == "-V") {
-        println!("artcraft-launcher {}", env!("CARGO_PKG_VERSION"));
+        println!("artpixels {}", env!("CARGO_PKG_VERSION"));
         return ExitCode::SUCCESS;
     }
     let mut hidden = args.iter().any(|a| a == login::HIDDEN_FLAG);
@@ -79,7 +79,7 @@ fn main() -> ExitCode {
     if let Some(logs) = logs {
         match artcraft_launcher_native::paths::Paths::new() {
             Ok(paths) => match logs.attach_dir(&paths.logs()) {
-                Ok(path) => log::info!("ArtCraft Launcher {}, log file {}", env!("CARGO_PKG_VERSION"), path.display()),
+                Ok(path) => log::info!("ArtPixels Launcher {}, log file {}", env!("CARGO_PKG_VERSION"), path.display()),
                 Err(e) => {
                     logs.no_file();
                     log::warn!("no log file: {e}");
@@ -130,7 +130,7 @@ fn main() -> ExitCode {
             let result = {
                 let (waker, launcher) = (waker.clone(), &mut launcher);
                 eframe::run_native(
-                    "ArtCraft Launcher",
+                    "ArtPixels Launcher",
                     native_options(hidden),
                     Box::new(move |cc| {
                         launcher.open(cc, &waker);

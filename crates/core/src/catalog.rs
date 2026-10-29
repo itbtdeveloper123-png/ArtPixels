@@ -124,8 +124,16 @@ const fn app(
 
 /// The Craft App Suite, in display order matching getartcraft.com, then the community apps:
 pub const SUITE: [CraftApp; 14] = [
-    app("photocraft", "PhotoCraft", "Image editing", [[0x2f, 0x7b, 0xf5], [0x1a, 0x5b, 0xc4], [0x7f, 0xb0, 0xff]], "storytold/photocraft"),
-    app("vectorcraft", "VectorCraft", "Vector illustration", [[0xe8, 0x57, 0x3f], [0xb8, 0x3a, 0x24], [0xff, 0x8a, 0x70]], "storytold/vectorcraft"),
+    CraftApp {
+        former_ids: &["angkorpix"],
+        former_names: &["PhotoCraft"],
+        ..app("photocraft", "AngkorPix", "Image editing", [[0x2f, 0x7b, 0xf5], [0x1a, 0x5b, 0xc4], [0x7f, 0xb0, 0xff]], "storytold/photocraft")
+    },
+    CraftApp {
+        former_ids: &["angkorvector"],
+        former_names: &["VectorCraft"],
+        ..app("vectorcraft", "AngkorVector", "Vector illustration", [[0xe8, 0x57, 0x3f], [0xb8, 0x3a, 0x24], [0xff, 0x8a, 0x70]], "storytold/vectorcraft")
+    },
     app(
         "filmcraft",
         "FilmCraft",
@@ -294,7 +302,7 @@ mod tests {
         ids.dedup();
         assert_eq!(ids.len(), SUITE.len());
         for a in &SUITE {
-            assert_eq!(a.name.to_lowercase(), a.id);
+            assert!(a.name.to_lowercase() == a.id || a.former_names.iter().any(|n| n.to_lowercase() == a.id));
             match a.kind {
                 AppKind::Official => assert_eq!(a.repo, format!("storytold/{}", a.id)),
                 AppKind::Community => assert!(!a.repo.starts_with("storytold/"), "{} is community", a.id),

@@ -86,11 +86,27 @@ impl LauncherUi {
             ui.spacing_mut().item_spacing.x = 0.0;
             if bar == TitleBar::MacOs {
                 ui.add_space(TRAFFIC_LIGHTS_W);
+            } else {
+                ui.add_space(16.0);
             }
-            // The ArtCraft wordmark exactly as supplied, in its own cell.
-            let logo = vec2(14.0 * crate::icons::ARTCRAFT_LOGO_ASPECT, 14.0);
-            let (cell, _) = ui.allocate_exact_size(vec2(logo.x + 40.0, h), Sense::hover());
-            egui::Image::new(crate::icons::artcraft_logo(t.dark)).alt_text(tl!("ArtCraft")).paint_at(ui, Rect::from_center_size(cell.center(), logo));
+
+
+
+            // ArtPixels logo & wordmark
+            let mark_h = 18.0;
+            ui.add(egui::Image::new(crate::icons::artcraft_mark()).fit_to_exact_size(vec2(mark_h, mark_h)));
+            ui.add_space(8.0);
+            ui.label(
+                egui::RichText::new("ARTPIXELS")
+                    .size(15.0)
+                    .family(theme::display())
+                    .strong()
+                    .extra_letter_spacing(1.2)
+                    .color(t.ink_strong),
+            );
+            ui.add_space(14.0);
+            widgets::badge(ui, tl!("LAUNCHER"), t.ink_strong);
+            ui.add_space(14.0);
             ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
                 if bar == TitleBar::Custom {
                     widgets::window_buttons(ui, h);
@@ -100,10 +116,11 @@ impl LauncherUi {
                 }
                 // The controls reserve their actual widths before the secondary text gets space.
                 ui.with_layout(egui::Layout::left_to_right(egui::Align::Center), |ui| {
-                    if ui.available_width() >= 17.0 + widgets::hud_galley(ui, tl!("Craft App Suite"), t.muted).size().x {
+                    let suite_label = tl!("ArtPixels Creative Suite");
+                    if ui.available_width() >= 17.0 + widgets::hud_galley(ui, suite_label, t.muted).size().x {
                         widgets::rule(ui, h);
                         ui.add_space(16.0);
-                        widgets::hud(ui, tl!("Craft App Suite"), t.muted);
+                        widgets::hud(ui, suite_label, t.muted);
                     }
                 });
             });

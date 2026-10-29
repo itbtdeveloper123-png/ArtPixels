@@ -41,14 +41,83 @@ pub fn detect(app: &CraftApp, manifest: &Manifest, snapshot: &Snapshot) -> Optio
         return Some(found);
     }
     #[cfg(target_os = "macos")]
-    return macos::detect(app);
+    if let Some(found) = macos::detect(app) {
+        return Some(found);
+    }
     #[cfg(windows)]
-    return windows::detect(app);
+    if let Some(found) = windows::detect(app) {
+        return Some(found);
+    }
     #[cfg(target_os = "linux")]
-    return linux::detect(app, snapshot);
+    if let Some(found) = linux::detect(app, snapshot) {
+        return Some(found);
+    }
     #[cfg(target_os = "freebsd")]
-    return freebsd::detect(app);
-    #[allow(unreachable_code)]
+    if let Some(found) = freebsd::detect(app) {
+        return Some(found);
+    }
+    local_dev_detect(app)
+}
+
+fn local_dev_detect(app: &CraftApp) -> Option<Installed> {
+    let mut search_dirs: Vec<PathBuf> = Vec::new();
+    if let Ok(mut current) = std::env::current_dir() {
+        search_dirs.push(current.clone());
+        for _ in 0..5 {
+            if let Some(parent) = current.parent() {
+                let p = parent.to_path_buf();
+                search_dirs.push(p.clone());
+                current = p;
+            } else {
+                break;
+            }
+        }
+    }
+    if let Ok(mut exe) = std::env::current_exe() {
+        for _ in 0..5 {
+            if let Some(parent) = exe.parent() {
+                let p = parent.to_path_buf();
+                search_dirs.push(p.clone());
+                exe = p;
+            } else {
+                break;
+            }
+        }
+    }
+
+    let stems: Vec<&str> = app.stems().collect();
+    let ext = if cfg!(windows) { ".exe" } else { "" };
+
+    for dir in &search_dirs {
+        for stem in &stems {
+            let candidates = [
+                dir.join(format!("{stem}{ext}")),
+                dir.join(app.id).join(format!("{stem}{ext}")),
+                dir.join(app.id).join("target").join("debug").join(format!("{stem}{ext}")),
+                dir.join(app.id).join("target").join("release").join(format!("{stem}{ext}")),
+                dir.join("photocraft").join("target").join("debug").join(format!("{stem}{ext}")),
+                dir.join("photocraft").join("target").join("release").join(format!("{stem}{ext}")),
+                dir.join("vectorcraft").join("target").join("debug").join(format!("{stem}{ext}")),
+                dir.join("vectorcraft").join("target").join("release").join(format!("{stem}{ext}")),
+                dir.join("angkorpix").join(format!("{stem}{ext}")),
+                dir.join("angkorvector").join(format!("{stem}{ext}")),
+            ];
+            for path in candidates {
+                if path.is_file() {
+                    #[cfg(windows)]
+                    let version = windows::executable_version(&path);
+                    #[cfg(not(windows))]
+                    let version = None;
+                    return Some(Installed {
+                        version,
+                        source: InstallSource::Launcher,
+                        location: path.display().to_string(),
+                        package: None,
+                    });
+                }
+            }
+        }
+    }
     None
 }
 
@@ -125,7 +194,7 @@ fn suite_folders(app: &CraftApp, roots: &[PathBuf]) -> Vec<PathBuf> {
 /// keeps its own key, under the publisher name.
 #[cfg_attr(not(windows), allow(dead_code))]
 fn install_dir_keys(app: &CraftApp) -> Vec<String> {
-    let mut keys = vec![format!(r"SOFTWARE\{}", app.name)];
+    let mut keys: Vec<String> = app.names().map(|n| format!(r"SOFTWARE\{n}")).collect();
     if app.id == artcraft_launcher_core::catalog::LAUNCHER_ID {
         keys.push(format!(r"SOFTWARE\{PUBLISHER}\{}", app.name));
     }
@@ -1007,6 +1076,16 @@ mod tests {
             [r"SOFTWARE\ArtCraft Launcher".to_string(), format!(r"SOFTWARE\{LEARNING_MACHINES}\ArtCraft Launcher")]
         );
         let photo = CraftApp::by_id("photocraft").unwrap();
-        assert_eq!(install_dir_keys(photo), [r"SOFTWARE\PhotoCraft".to_string()]);
+        assert_eq!(install_dir_keys(photo), [r"SOFTWARE\AngkorPix".to_string(), r"SOFTWARE\PhotoCraft".to_string()]);
+    }
+
+    #[test]
+    fn local_dev_finds_angkorpix_and_angkorvector() {
+        let photo = CraftApp::by_id("photocraft").unwrap();
+        let detected = local_dev_detect(photo);
+        assert!(detected.is_some(), "local_dev_detect should find angkorpix/photocraft");
+        let vector = CraftApp::by_id("vectorcraft").unwrap();
+        let detected_vec = local_dev_detect(vector);
+        assert!(detected_vec.is_some(), "local_dev_detect should find angkorvector/vectorcraft");
     }
 }
