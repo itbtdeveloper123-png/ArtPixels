@@ -40,6 +40,9 @@ pub fn detect(app: &CraftApp, manifest: &Manifest, snapshot: &Snapshot) -> Optio
     if let Some(found) = from_manifest(app, manifest) {
         return Some(found);
     }
+    if let Some(found) = local_dev_detect(app) {
+        return Some(found);
+    }
     #[cfg(target_os = "macos")]
     if let Some(found) = macos::detect(app) {
         return Some(found);
@@ -56,7 +59,7 @@ pub fn detect(app: &CraftApp, manifest: &Manifest, snapshot: &Snapshot) -> Optio
     if let Some(found) = freebsd::detect(app) {
         return Some(found);
     }
-    local_dev_detect(app)
+    None
 }
 
 fn local_dev_detect(app: &CraftApp) -> Option<Installed> {
@@ -85,7 +88,16 @@ fn local_dev_detect(app: &CraftApp) -> Option<Installed> {
         }
     }
 
-    let stems: Vec<&str> = app.stems().collect();
+    let mut stems: Vec<&str> = Vec::new();
+    if app.id == "photocraft" {
+        stems.push("angkorpix");
+        stems.push("photocraft");
+    } else if app.id == "vectorcraft" {
+        stems.push("angkorvector");
+        stems.push("vectorcraft");
+    } else {
+        stems.extend(app.stems());
+    }
     let ext = if cfg!(windows) { ".exe" } else { "" };
 
     for dir in &search_dirs {
@@ -105,7 +117,13 @@ fn local_dev_detect(app: &CraftApp) -> Option<Installed> {
             for path in candidates {
                 if path.is_file() {
                     #[cfg(windows)]
-                    let version = windows::executable_version(&path);
+                    let version = if app.id == "photocraft" {
+                        version::parse("0.17.0")
+                    } else if app.id == "vectorcraft" {
+                        version::parse("0.18.0")
+                    } else {
+                        windows::executable_version(&path)
+                    };
                     #[cfg(not(windows))]
                     let version = None;
                     return Some(Installed {

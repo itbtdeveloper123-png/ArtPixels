@@ -105,7 +105,7 @@ impl LauncherUi {
                     .color(t.ink_strong),
             );
             ui.add_space(14.0);
-            widgets::badge(ui, tl!("LAUNCHER"), t.ink_strong);
+            widgets::badge(ui, "LAUNCHER", t.ink_strong);
             ui.add_space(14.0);
             ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
                 if bar == TitleBar::Custom {
@@ -116,7 +116,7 @@ impl LauncherUi {
                 }
                 // The controls reserve their actual widths before the secondary text gets space.
                 ui.with_layout(egui::Layout::left_to_right(egui::Align::Center), |ui| {
-                    let suite_label = tl!("ArtPixels Creative Suite");
+                    let suite_label = "ArtPixels Creative Suite";
                     if ui.available_width() >= 17.0 + widgets::hud_galley(ui, suite_label, t.muted).size().x {
                         widgets::rule(ui, h);
                         ui.add_space(16.0);
@@ -132,12 +132,7 @@ impl LauncherUi {
             self.settings.filter = Filter::All;
         }
         let t = Tokens::get(ui.ctx());
-        if self.dialog.is_none()
-            && let Some(r) = self.launcher_update.clone()
-        {
-            self.launcher_update_banner(ui, &t, &r);
-            ui.add_space(14.0);
-        }
+        // Self-update banner disabled for ArtPixels Launcher
         self.announcements(ui);
         let updates = self.count(Filter::Updates);
         let compact = self.toolbar_row(ui, &t, updates);
@@ -148,6 +143,7 @@ impl LauncherUi {
 
     /// A banner over the toolbar when a newer ArtCraft Launcher release is known: either the
     /// update-in-place controls, or a plain link when this build can't update itself.
+    #[allow(dead_code)]
     fn launcher_update_banner(&mut self, ui: &mut Ui, t: &Tokens, r: &artcraft_launcher_core::Release) {
         egui::Frame::new()
             .fill(tint(t.accent, if t.dark { 0.10 } else { 0.07 }))
@@ -169,6 +165,7 @@ impl LauncherUi {
 
     /// The banner's right side: the download's progress and cancel while it runs, otherwise the
     /// update (or download) buttons plus the release link.
+    #[allow(dead_code)]
     fn banner_actions(&mut self, ui: &mut Ui, t: &Tokens, r: &artcraft_launcher_core::Release) {
         ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
             if let Some(phase) = self.launcher_job {
@@ -430,13 +427,14 @@ impl LauncherUi {
         let installed = ids.iter().take_while(|id| self.is_installed(id)).count();
         let (top, rest) = ids.split_at(installed);
         self.grid_block(ui, top);
-        if !top.is_empty() && !rest.is_empty() {
+        if !self.search.is_empty() && !rest.is_empty() {
             let t = Tokens::get(ui.ctx());
             ui.add_space(28.0);
             widgets::hud(ui, tl!("Not installed"), t.faint);
             ui.add_space(12.0);
+            self.grid_block(ui, rest);
         }
-        self.grid_block(ui, rest);
+
         ui.add_space(24.0);
     }
 

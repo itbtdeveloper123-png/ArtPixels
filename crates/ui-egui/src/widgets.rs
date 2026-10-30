@@ -82,6 +82,7 @@ pub fn eyebrow(ui: &mut Ui, index: &str, label: &str) {
 }
 
 /// A solid chip with a bold mono label: an app's number tab (the site's `AppTab`).
+#[allow(dead_code)]
 pub fn tag(ui: &mut Ui, text: &str, fill: Color32, ink: Color32) -> Response {
     let galley = caps(ui, text, theme::HUD_SIZE, theme::mono_bold(), theme::HUD_SPACING, ink);
     let (rect, resp) = ui.allocate_exact_size(galley.size() + vec2(16.0, 8.0), Sense::hover());

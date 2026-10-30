@@ -114,6 +114,7 @@ pub(crate) enum Dialog {
     Install { app: String, folder: String },
     Replace { app: String, path: String },
     Settings,
+    #[allow(dead_code)]
     LauncherUpdate(artcraft_launcher_core::Release),
 }
 
@@ -620,16 +621,8 @@ impl LauncherUi {
     }
 
     /// Offers the launcher's own update once per new version, unless automatic updates install it.
-    fn on_launcher_update(&mut self, r: Release) -> bool {
-        // Whether the launcher can replace itself is only known once an update is found.
-        self.caps = self.backend.capabilities();
-        let fresh = self.launcher_update.as_ref().is_none_or(|cur| cur.version != r.version);
-        self.launcher_update = Some(r.clone());
-        let automatic = self.settings.auto_update && self.caps.self_update;
-        if fresh && !automatic && self.dialog.is_none() && self.launcher_job.is_none() {
-            self.dialog = Some(Dialog::LauncherUpdate(r));
-        }
-        fresh
+    fn on_launcher_update(&mut self, _r: Release) -> bool {
+        false
     }
 
     /// One notification per new version of an installed app.

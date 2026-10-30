@@ -113,7 +113,7 @@ const fn app(
         former_ids: &[],
         former_names: &[],
         kind: AppKind::Official,
-        publisher: "ArtCraft",
+        publisher: "ArtPixels",
         msi_publisher: None,
         bundle: None,
         former_bundles: &[],
@@ -127,12 +127,12 @@ pub const SUITE: [CraftApp; 14] = [
     CraftApp {
         former_ids: &["angkorpix"],
         former_names: &["PhotoCraft"],
-        ..app("photocraft", "AngkorPix", "Image editing", [[0x2f, 0x7b, 0xf5], [0x1a, 0x5b, 0xc4], [0x7f, 0xb0, 0xff]], "storytold/photocraft")
+        ..app("photocraft", "AngkorPix", "Image editing", [[0x2f, 0x7b, 0xf5], [0x1a, 0x5b, 0xc4], [0x7f, 0xb0, 0xff]], "itbtdeveloper123-png/AngkorPix")
     },
     CraftApp {
         former_ids: &["angkorvector"],
         former_names: &["VectorCraft"],
-        ..app("vectorcraft", "AngkorVector", "Vector illustration", [[0xe8, 0x57, 0x3f], [0xb8, 0x3a, 0x24], [0xff, 0x8a, 0x70]], "storytold/vectorcraft")
+        ..app("vectorcraft", "AngkorVector", "Vector illustration", [[0xe8, 0x57, 0x3f], [0xb8, 0x3a, 0x24], [0xff, 0x8a, 0x70]], "itbtdeveloper123-png/AngkorVector")
     },
     app(
         "filmcraft",
@@ -248,14 +248,14 @@ pub const DISCORD_APP_URL: &str = "discord://-/invite/artcraft";
 /// `ArtCraft Launcher.app`). Not part of [`SUITE`].
 pub const LAUNCHER: CraftApp = app(
     "artcraft-launcher",
-    "ArtCraft Launcher",
-    "Installs and updates the Craft App Suite",
+    "ArtPixels Launcher",
+    "Installs and updates the ArtPixels Creative Suite",
     [[0x0b, 0x0b, 0x0c], [0x0b, 0x0b, 0x0c], [0xf2, 0xf1, 0xee]],
-    "storytold/craft-launcher",
+    "itbtdeveloper123-png/ArtPixels",
 );
 
 /// The launcher's own repo, checked so it can say when a newer launcher is out.
-pub const LAUNCHER_REPO: &str = "storytold/craft-launcher";
+pub const LAUNCHER_REPO: &str = "itbtdeveloper123-png/ArtPixels";
 /// The launcher's own asset stem.
 pub const LAUNCHER_ID: &str = "artcraft-launcher";
 
