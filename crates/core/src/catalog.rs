@@ -123,106 +123,19 @@ const fn app(
 }
 
 /// The Craft App Suite, in display order matching getartcraft.com, then the community apps:
-pub const SUITE: [CraftApp; 14] = [
+pub const SUITE: [CraftApp; 2] = [
     CraftApp {
-        former_ids: &["angkorpix"],
-        former_names: &["PhotoCraft"],
+        former_ids: &[],
+        former_names: &[],
         ..app("photocraft", "AngkorPix", "Image editing", [[0x2f, 0x7b, 0xf5], [0x1a, 0x5b, 0xc4], [0x7f, 0xb0, 0xff]], "itbtdeveloper123-png/AngkorPix")
     },
     CraftApp {
-        former_ids: &["angkorvector"],
-        former_names: &["VectorCraft"],
+        former_ids: &[],
+        former_names: &[],
         ..app("vectorcraft", "AngkorVector", "Vector illustration", [[0xe8, 0x57, 0x3f], [0xb8, 0x3a, 0x24], [0xff, 0x8a, 0x70]], "itbtdeveloper123-png/AngkorVector")
-    },
-    app(
-        "filmcraft",
-        "FilmCraft",
-        "Video editing, color and sound",
-        [[0x8b, 0x5c, 0xf6], [0x6a, 0x3f, 0xd6], [0xb6, 0x9c, 0xff]],
-        "storytold/filmcraft",
-    ),
-    app(
-        "lightcraft",
-        "LightCraft",
-        "Photo library and raw development",
-        [[0xf2, 0xa5, 0x16], [0x8a, 0x58, 0x00], [0xff, 0xc1, 0x4d]],
-        "storytold/lightcraft",
-    ),
-    CraftApp {
-        former_ids: &["printcraft"],
-        former_names: &["PrintCraft"],
-        ..app(
-            "pdfcraft",
-            "PdfCraft",
-            "Reading, organizing and protecting PDFs",
-            [[0x12, 0xa5, 0x8a], [0x0a, 0x75, 0x63], [0x3f, 0xd6, 0xb8]],
-            "storytold/pdfcraft",
-        )
-    },
-    app(
-        "effectcraft",
-        "EffectCraft",
-        "Motion graphics and visual effects",
-        [[0xe0, 0x36, 0x8f], [0xb0, 0x20, 0x6c], [0xff, 0x7a, 0xb8]],
-        "storytold/effectcraft",
-    ),
-    app(
-        "designcraft",
-        "DesignCraft",
-        "Page layout and publishing",
-        [[0x7b, 0xb5, 0x1c], [0x45, 0x70, 0x08], [0xa6, 0xe0, 0x4a]],
-        "storytold/designcraft",
-    ),
-    app(
-        "figcraft",
-        "FigCraft",
-        "Interface design and prototyping",
-        [[0x02, 0xda, 0x96], [0x04, 0x7a, 0x56], [0x4f, 0xe8, 0xb6]],
-        "storytold/figcraft",
-    ),
-    app("wordcraft", "WordCraft", "Writing and document design", [[0x3f, 0x5f, 0xe0], [0x2a, 0x44, 0xb8], [0x8e, 0xa2, 0xff]], "storytold/wordcraft"),
-    app(
-        "soundcraft",
-        "SoundCraft",
-        "Recording, editing and mixing audio",
-        [[0x1f, 0xa5, 0xc9], [0x0e, 0x72, 0x90], [0x5f, 0xd0, 0xee]],
-        "storytold/soundcraft",
-    ),
-    app(
-        "deckcraft",
-        "DeckCraft",
-        "Presentations and slide shows",
-        [[0xf0, 0x7a, 0x1e], [0xa8, 0x4f, 0x0a], [0xff, 0xa0, 0x60]],
-        "storytold/deckcraft",
-    ),
-    app(
-        "cadcraft",
-        "CADCraft",
-        "Computer-aided design and drafting",
-        [[0x3e, 0xa6, 0xe8], [0x1a, 0x6f, 0xa8], [0x7c, 0xc8, 0xff]],
-        "storytold/cadcraft",
-    ),
-    app("gridcraft", "GridCraft", "Spreadsheets and data", [[0x1f, 0x9d, 0x55], [0x12, 0x70, 0x3a], [0x4f, 0xd6, 0x8a]], "storytold/gridcraft"),
-    CraftApp {
-        kind: AppKind::Community,
-        publisher: "Tangency Labs",
-        msi_publisher: Some("SolidCraft contributors"),
-        bundle: Some("io.tangencylabs.solidcraft"),
-        former_bundles: &["ai.storyteller.solidcraft", "ai.storyteller.solvecraft"],
-        site: Some("https://solidcraft.io"),
-        // Its macOS builds aren't Developer ID signed yet (its README says to right-click Open).
-        installs_on_mac: false,
-        ..app(
-            "solidcraft",
-            "SolidCraft",
-            "Parametric 3D CAD",
-            [[0x46, 0xa1, 0xfb], [0x16, 0x53, 0xae], [0x8c, 0xc4, 0xff]],
-            "tangency-labs/solidcraft",
-        )
     },
 ];
 
-/// ArtCraft's website.
 pub const WEBSITE_URL: &str = "https://github.com/itbtdeveloper123-png";
 /// The GitHub account every official Craft App's repository lives under. The release feed can
 /// only move an app within it; a community app installs from its own repo, pinned in [`SUITE`].
@@ -289,41 +202,14 @@ mod tests {
     }
 
     #[test]
-    fn suite_has_fourteen_apps_with_unique_ids() {
-        assert_eq!(SUITE.len(), 14);
+    fn suite_has_two_apps_with_unique_ids() {
+        assert_eq!(SUITE.len(), 2);
         let mut ids: Vec<_> = SUITE.iter().map(|a| a.id).collect();
         ids.sort_unstable();
         ids.dedup();
         assert_eq!(ids.len(), SUITE.len());
         for a in &SUITE {
-            assert!(a.name.to_lowercase() == a.id || a.former_names.iter().any(|n| n.to_lowercase() == a.id));
-            match a.kind {
-                AppKind::Official => assert_eq!(a.repo, format!("storytold/{}", a.id)),
-                AppKind::Community => assert!(!a.repo.starts_with("storytold/"), "{} is community", a.id),
-            }
+            assert!(a.repo.starts_with("itbtdeveloper123-png/"));
         }
-    }
-
-    #[test]
-    fn solidcraft_is_a_community_app_with_its_own_bundle_id() {
-        let sc = CraftApp::by_id("solidcraft").unwrap();
-        assert_eq!(sc.kind, AppKind::Community);
-        assert_eq!(sc.repo, "tangency-labs/solidcraft");
-        assert_eq!(sc.bundle_id(), "io.tangencylabs.solidcraft");
-        assert_eq!(sc.bundle_ids().collect::<Vec<_>>(), ["io.tangencylabs.solidcraft", "ai.storyteller.solidcraft", "ai.storyteller.solvecraft"]);
-        assert_eq!(CraftApp::by_id("gridcraft").unwrap().bundle_id(), "ai.storyteller.gridcraft");
-        assert_eq!(CraftApp::by_id("gridcraft").unwrap().kind, AppKind::Official);
-        assert_eq!(sc.website(), "https://solidcraft.io");
-        assert!(!sc.installs(crate::PackageKind::Dmg) && sc.installs(crate::PackageKind::Msi) && sc.installs(crate::PackageKind::Flatpak));
-        assert!(CraftApp::by_id("gridcraft").unwrap().installs(crate::PackageKind::Dmg));
-    }
-
-    #[test]
-    fn pdfcraft_also_answers_to_printcraft() {
-        let pdf = CraftApp::by_id("pdfcraft").unwrap();
-        assert_eq!(pdf.stems().collect::<Vec<_>>(), ["pdfcraft", "printcraft"]);
-        assert_eq!(pdf.names().collect::<Vec<_>>(), ["PdfCraft", "PrintCraft"]);
-        assert_eq!(pdf.website(), "https://getartcraft.com/apps/pdfcraft");
-        assert_eq!(CraftApp::by_id("wordcraft").unwrap().website(), "https://getartcraft.com/apps/wordcraft");
     }
 }

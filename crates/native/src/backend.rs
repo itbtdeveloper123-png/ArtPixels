@@ -314,7 +314,7 @@ impl NativeBackend {
             restarting
         };
         if restarting {
-            let result = Err("ArtCraft Launcher is restarting to finish its update. Try again once it's back.".into());
+            let result = Err("ArtPixels Launcher is restarting to finish its update. Try again once it's back.".into());
             self.shared.emit(Event::JobFinished { app: app.id.to_string(), result });
             return;
         }

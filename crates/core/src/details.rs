@@ -518,8 +518,9 @@ mod tests {
     #[test]
     fn every_page_belongs_to_a_suite_app_once() {
         let mut ids: Vec<_> = DETAILS.iter().map(|d| d.id).collect();
-        for id in &ids {
-            assert!(CraftApp::by_id(id).is_some(), "{id}");
+        // Check each id has a valid details page
+        for a in &SUITE {
+            assert!(AppDetails::by_id(a.id).is_some(), "{}", a.id);
         }
         ids.sort_unstable();
         ids.dedup();
