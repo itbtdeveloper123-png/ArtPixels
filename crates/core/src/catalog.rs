@@ -67,7 +67,7 @@ impl CraftApp {
 
     /// The app's website: its page on getartcraft.com, or a community app's own site.
     pub fn website(&self) -> String {
-        self.site.map_or_else(|| format!("https://getartcraft.com/apps/{}", self.id), str::to_string)
+        self.site.map_or_else(|| self.repo_url(), str::to_string)
     }
 
     /// Whether the launcher installs this app from a `kind` package.
@@ -223,25 +223,19 @@ pub const SUITE: [CraftApp; 14] = [
 ];
 
 /// ArtCraft's website.
-pub const WEBSITE_URL: &str = "https://getartcraft.com";
+pub const WEBSITE_URL: &str = "https://github.com/itbtdeveloper123-png";
 /// The GitHub account every official Craft App's repository lives under. The release feed can
 /// only move an app within it; a community app installs from its own repo, pinned in [`SUITE`].
-pub const GITHUB_OWNER: &str = "storytold";
+pub const GITHUB_OWNER: &str = "itbtdeveloper123-png";
 /// ArtCraft on GitHub: every Craft App's source.
-pub const GITHUB_URL: &str = "https://github.com/storytold";
+pub const GITHUB_URL: &str = "https://github.com/itbtdeveloper123-png";
 /// ArtCraft's social accounts: (service, URL). Shown as small icons, less prominent than Discord.
-pub const SOCIAL: [(&str, &str); 5] = [
-    ("X", "https://x.com/get_artcraft"),
-    ("Instagram", "https://www.instagram.com/officialartcraftstudios"),
-    ("LinkedIn", "https://www.linkedin.com/company/artcraft-ai"),
-    ("YouTube", "https://www.youtube.com/@OfficialArtcraftStudios"),
-    ("TikTok", "https://www.tiktok.com/@artcraft.studios"),
-];
+pub const SOCIAL: [(&str, &str); 0] = [];
 
 /// The ArtCraft community on Discord.
-pub const DISCORD_URL: &str = "https://discord.gg/artcraft";
+pub const DISCORD_URL: &str = "https://github.com/itbtdeveloper123-png";
 /// Deep link into the Discord application for the ArtCraft server invite.
-pub const DISCORD_APP_URL: &str = "discord://-/invite/artcraft";
+pub const DISCORD_APP_URL: &str = "https://github.com/itbtdeveloper123-png";
 
 /// ArtCraft Launcher itself, described like a Craft App so it can update itself with the same
 /// machinery (asset names `artcraft-launcher-<ver>-…`, bundle id `ai.storyteller.artcraft-launcher`,

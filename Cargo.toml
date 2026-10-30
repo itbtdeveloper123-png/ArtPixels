@@ -7,7 +7,9 @@ version = "0.9.0"
 edition = "2024"
 license = "MIT OR Apache-2.0"
 rust-version = "1.95"
-repository = "https://github.com/storytold/craft-launcher"
+repository = "https://github.com/itbtdeveloper123-png/ArtPixels"
+homepage = "https://github.com/itbtdeveloper123-png/ArtPixels"
+authors = ["ArtPixels <itbtdeveloper.123@gmail.com>"]
 
 [workspace.lints.rust]
 unsafe_code = "forbid"

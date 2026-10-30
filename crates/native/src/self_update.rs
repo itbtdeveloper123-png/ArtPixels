@@ -14,14 +14,24 @@ use crate::paths::Paths;
 
 pub use craft_update::self_update::{FINISH_FLAG, Install, PRETEND_VAR, is_self_updating};
 
+pub const ARTPIXELS_LAUNCHER: craft_update::App = craft_update::App {
+    id: "artpixels-launcher",
+    name: "ArtPixels Launcher",
+    tagline: "Installs and updates the ArtPixels Creative Suite",
+    repo: "itbtdeveloper123-png/ArtPixels",
+    former_ids: &["artcraft-launcher"],
+    former_names: &["ArtCraft Launcher"],
+    icon_png: None,
+};
+
 /// The version this launcher counts as (see [`PRETEND_VAR`]).
 pub fn current_version() -> Option<Version> {
-    craft_update::self_update::current_version(&craft_update::suite::LAUNCHER, env!("CARGO_PKG_VERSION"))
+    craft_update::self_update::current_version(&ARTPIXELS_LAUNCHER, env!("CARGO_PKG_VERSION"))
 }
 
 /// How this copy is installed, if it's one the launcher knows how to replace.
 pub fn current() -> Option<Install> {
-    craft_update::self_update::current(&craft_update::suite::LAUNCHER)
+    craft_update::self_update::current(&ARTPIXELS_LAUNCHER)
 }
 
 fn to_update_paths(paths: &Paths) -> craft_update::Paths {
@@ -104,7 +114,7 @@ pub fn update(
         });
     };
     craft_update::self_update::update(
-        &craft_update::suite::LAUNCHER,
+        &ARTPIXELS_LAUNCHER,
         install,
         &update_release,
         update_platform,
@@ -119,7 +129,7 @@ pub fn update(
 
 /// Finishes an update when this program was started as the update helper.
 pub fn finish(args: &[OsString]) -> Option<Result<(), String>> {
-    craft_update::self_update::finish(&craft_update::suite::LAUNCHER, args)
+    craft_update::self_update::finish(&ARTPIXELS_LAUNCHER, args)
 }
 
 #[cfg(test)]

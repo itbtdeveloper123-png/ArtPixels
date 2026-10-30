@@ -758,6 +758,9 @@ struct Fallback {
 ///   apps the feed doesn't list or hasn't refreshed in a day, or once the feed has seriously
 ///   failed (several checks in a row and an hour without an answer); then hourly per app.
 fn feed_and_fallback(http: &Http, paths: &Paths, shared: &Shared) -> (Option<Feed>, Fallback) {
+    if feed_url().is_empty() {
+        return (None, Fallback { trust_feed: false, github_every: EARLY_GITHUB_EVERY });
+    }
     let saved = load_feed(paths);
     let loaded = shared.loaded.load(Ordering::SeqCst);
     let first_time = !loaded && saved.is_none();

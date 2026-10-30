@@ -54,11 +54,11 @@ impl LauncherUi {
             ui,
             Some(crate::icons::artcraft_mark()),
             tl!("Settings"),
-            &format!("ArtCraft Launcher {}", env!("CARGO_PKG_VERSION")),
+            &format!("ArtPixels Launcher {}", env!("CARGO_PKG_VERSION")),
             |_| {},
         );
 
-        let quit_width = widgets::button_width(ui, tl!("Quit ArtCraft Launcher"), 0.0);
+        let quit_width = widgets::button_width(ui, tl!("Quit ArtPixels Launcher"), 0.0);
         let done_width = widgets::button_width(ui, tl!("Done"), 90.0);
         let stack_actions = self.caps.manage_apps && quit_width + done_width + ui.spacing().item_spacing.x + 48.0 > size.x;
         let footer_h = if stack_actions { 2.0 * theme::CONTROL_H + ui.spacing().item_spacing.y } else { theme::CONTROL_H } + 32.0;
@@ -80,7 +80,7 @@ impl LauncherUi {
         egui::Frame::new().inner_margin(egui::Margin::symmetric(theme::PAD as i8, 16)).show(ui, |ui| {
             ui.set_width(ui.available_width());
             let quit = |ui: &mut Ui, host: &mut dyn Host| {
-                if self.caps.manage_apps && widgets::button(ui, tl!("Quit ArtCraft Launcher"), Kind::Secondary, 0.0).clicked() {
+                if self.caps.manage_apps && widgets::button(ui, tl!("Quit ArtPixels Launcher"), Kind::Secondary, 0.0).clicked() {
                     host.quit();
                 }
             };
@@ -314,7 +314,7 @@ impl LauncherUi {
                 ));
             }
             if let Some(mut on) = host.login_item()
-                && ui.checkbox(&mut on, tl!("Start ArtCraft Launcher when I log in")).changed()
+                && ui.checkbox(&mut on, tl!("Start ArtPixels Launcher when I log in")).changed()
                 && let Err(e) = host.set_login_item(on)
             {
                 self.toast_from_ui(fmt(tl!("Couldn't change the login item: {e}"), &[("e", &e)]), true);
@@ -327,11 +327,11 @@ impl LauncherUi {
     fn settings_community(&mut self, ui: &mut Ui) {
         let t = Tokens::get(ui.ctx());
         sheet::panel(ui, tl!("Community"), |ui| {
-            ui.label(RichText::new(tl!("Questions, ideas and news from the ArtCraft team")).color(t.muted));
+            ui.label(RichText::new(tl!("Questions, ideas and news from the ArtPixels team")).color(t.muted));
             ui.add_space(6.0);
             ui.horizontal_wrapped(|ui| {
                 use artcraft_launcher_core::catalog::{GITHUB_URL, WEBSITE_URL};
-                if widgets::button(ui, tl!("Join the Discord"), Kind::Primary, 0.0).on_hover_text(self.discord_url).clicked() {
+                if widgets::button(ui, tl!("Community"), Kind::Primary, 0.0).on_hover_text(self.discord_url).clicked() {
                     widgets::open_external_link(ui.ctx(), self.discord_url);
                 }
                 if widgets::button(ui, tl!("Website"), Kind::Secondary, 0.0).on_hover_text(WEBSITE_URL).clicked() {

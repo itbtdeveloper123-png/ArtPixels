@@ -142,7 +142,7 @@ pub enum Origin {
 impl Origin {
     pub fn label(self) -> &'static str {
         match self {
-            Self::ArtCraftApi => "ArtCraft API",
+            Self::ArtCraftApi => "ArtPixels API",
             Self::GitHub => "GitHub",
         }
     }
@@ -164,7 +164,7 @@ pub enum Source {
 impl Source {
     pub fn label(self) -> &'static str {
         match self {
-            Self::Feed => "ArtCraft",
+            Self::Feed => "ArtPixels",
             Self::GitHubApi => "GitHub",
             Self::GitHubPages => "GitHub (release pages)",
             Self::Cache => "saved results",
